@@ -3,7 +3,7 @@ kind: PipelineRun
 metadata:
   generateName: tc-pipeline-run-
 spec:
-  serviceAccountName: pipeline-sa
+  serviceAccountName: pipeline
   pipelineRef:
     name: tc-pipeline
   params:
@@ -13,9 +13,10 @@ spec:
       value: "v2"
     - name: app-name
       value: "tax-calculator"
-    - name: build-image
-      value: "us.icr.io/sn-labs-fidakhan1/tax-calculator"
   workspaces:
     - name: pipeline-workspace
       persistentVolumeClaim:
         claimName: pipelinerun-pvc
+    - name: dockerconfig-ws
+      secret:
+        secretName: docker-reg-creds
