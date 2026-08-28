@@ -5,17 +5,16 @@ metadata:
 spec:
   workspaces:
     - name: pipeline-workspace
+    - name: dockerconfig-ws
   params:
-    - name: build-image
-      type: string
     - name: repo-url
       type: string
-    - name: branch
-      type: string
-      default: main
     - name: app-name
       type: string
       default: tax-calculator
+    - name: branch
+      type: string
+      default: main
   tasks:
     - name: init
       workspaces:
@@ -61,11 +60,13 @@ spec:
       workspaces:
         - name: source
           workspace: pipeline-workspace
+        - name: dockerconfig
+          workspace: dockerconfig-ws
       taskRef:
         name: buildah
         kind: ClusterTask
       params:
         - name: IMAGE
-          value: $(params.build-image)
+          value: us.icr.io/$(context.pipelineRun.namespace)/$(params.app-name)
       runAfter:
         - tests
